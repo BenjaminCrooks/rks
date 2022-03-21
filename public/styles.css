@@ -1,0 +1,199 @@
+/* Fonts */
+@font-face {
+  font-family: Montserrat Medium;
+  src: url(assets/fonts/Montserrat-Medium.ttf);
+}
+
+@font-face {
+  font-family: Montserrat Bold;
+  src: url(assets/fonts/Montserrat-Bold.ttf);
+}
+
+@font-face {
+  font-family: Montserrat Extra Bold;
+  src: url(assets/fonts/Montserrat-ExtraBold.ttf);
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url(assets/fonts/Roboto-Regular.ttf);
+}
+
+@font-face {
+  font-family: Roboto Medium;
+  src: url(assets/fonts/Roboto-Medium.ttf);
+}
+
+@font-face {
+  font-family: Roboto Bold;
+  src: url(assets/fonts/Roboto-Bold.ttf);
+}
+
+@font-face {
+  font-family: Roboto Black;
+  src: url(assets/fonts/Roboto-Black.ttf);
+}
+
+
+
+/* Tags */
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  /*transition: blur 0.25s ease-out;*/
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background-color: #181818;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 56px;
+  padding: 32px 0px;
+}
+
+img {
+  display: block;
+}
+
+a {
+  text-decoration: none;
+}
+
+p, a, span {
+  font-family: Roboto;
+  font-size: 13px;
+  color: white;
+  line-height: 1em;
+}
+
+
+
+/* Navigation Header */
+header {
+  width: 100%;
+  height: 56px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #282828;
+  z-index: 1;
+}
+
+header img {
+  height: 100%;
+}
+
+header a {
+  padding: 8px 16px;
+  font-size: 16px;
+}
+
+header a:first-of-type {
+  height: 90%;
+  margin-left: 8px;
+  margin-right: auto;
+  padding: 0px;
+}
+
+header a ~ a:not(:nth-child(2)) {
+  border-left: 1px solid #484848;
+}
+
+
+
+/* Elements */
+.btn {
+  font-family: Montserrat Bold;
+}
+
+.btn:not(.active):hover {
+  color: #989898;
+}
+
+.btn.active {
+  background-color: #686868;
+  cursor: default;
+}
+
+.gallery {
+  display: grid;
+  align-items: center;
+  gap: 24px;
+}
+
+.gallery img {
+  width: 100%;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  transition: opacity 0.25s ease-out;
+}
+
+.gallery:hover .item {
+  opacity: .5;
+}
+
+.gallery .item:hover {
+  opacity: 1;
+}
+
+.frame {
+  position: relative;
+}
+
+.infoOverlay {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.75) 100%);
+}
+
+.hContainer {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+}
+
+.vContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  width: 95%;
+  height: 1px;
+  background: #484848;
+}
+
+.vFlip {
+  transform: scaleY(-1);
+}
+
+.hFlip {
+  transform: scaleX(-1);
+}
+
+.icon {
+  aspect-ratio: 1 / 1;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hScroll {
+  display: flex;
+  overflow: scroll;
+}

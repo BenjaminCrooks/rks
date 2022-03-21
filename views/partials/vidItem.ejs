@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<% videos.forEach(function(element, index) { %>
+<div class="item" data-id = "<%= element._id %>">
+	<div class="frame">
+		<img src="assets/thumbnailMissing.jpg">
+		<div class="infoOverlay hContainer">
+			<% if (element.views.length > 0) { %>
+			<div class="icon" style="background-image: url('assets/icons/watchedIcon.png');"></div>
+			<% } if (element.watchlater != undefined) { %>
+			<div class="icon" style="background-image: url('assets/icons/savedIconW.png');"></div>
+			<% } %>
+			<p style="margin-left: auto;"><%= element.resolution %></p>
+			<p><%= element.length %></p>
+		</div>
+	</div>
+	<p><%= element.featuring.join(", ") %></p>
+</div>
+<% }) %>
