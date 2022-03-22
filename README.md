@@ -2,7 +2,9 @@
 Media application
 
 ### Folder structure
+```
 .
+├── node_modules
 ├── public
 │   └── assets
 │   │   └── fonts
@@ -12,4 +14,6 @@ Media application
 │   └── routes
 ├── views
 │   └── partials
-└── ...
+└── index.js
+└── README.md
+```
