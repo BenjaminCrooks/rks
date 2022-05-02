@@ -7,8 +7,8 @@ Media application to enable managing and interacting with a local media collecti
 ├── node_modules
 ├── public
 │   ├── assets
-│   │   ├── fonts # omitting .ttf files
-│   │   └── icons # omitting icon image files
+│   │   ├── fonts
+│   │   └── icons
 │   ├── models
 │   ├── plugins
 │   └── routes
