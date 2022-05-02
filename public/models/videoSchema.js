@@ -10,7 +10,7 @@ var videoSchema = new mongoose.Schema({
 	series: Array,
 	filesize: Number,
 	filetype: String,
-	length: String,
+	length: Number,
 	framewidth: Number,
 	frameheight: Number,
 	framerate: Number,

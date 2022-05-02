@@ -19,10 +19,16 @@ const videosPerPage = 30
 
 function pagination(req, page, docs) {
 	let pageCount = Math.ceil((docs[0].videoCount[0].count)/videosPerPage),
-		pageArray = [page-3, page-2, page-1, page, page+1, page+2, page+3],
-		iterablePages = [page-3, page-2, page-1, page, page+1, page+2, page+3],
-		pages = docs[0].videoCount[0].count > videosPerPage,
-		url = req.protocol + '://' + req.get('host') + req.originalUrl
+			pageArray = [page-3, page-2, page-1, page, page+1, page+2, page+3],
+			iterablePages = [page-3, page-2, page-1, page, page+1, page+2, page+3],
+			pages = docs[0].videoCount[0].count > videosPerPage,
+			url = req.protocol + '://' + req.get('host') + req.originalUrl
+
+	if (page == 1 && !url.includes("p=") && Object.keys(req.query).length == 0) {
+		url = url + "?p=1"
+	} else if (page == 1 && !url.includes("p=") && Object.keys(req.query).length > 0) {
+		url = url + "&p=1"
+	}
 
 	iterablePages.forEach(function(i) {
 		if (i < 1) {
@@ -48,13 +54,8 @@ function volatileFacet(pageParam, sortOrder) {
 			"videos": [
 				{$sort: {}},
 				{$skip: undefined},
-				{$limit: videosPerPage}
-				// ,
-				// {$set: {
-				// 	date: {$dateToString: {format: "%m %d, %Y", date: "$date", timezone: "America/New_York"}},
-				// 	creationdate: {$dateToString: {format: "%m %d, %Y", date: "$creationdate", timezone: "America/New_York"}},
-				// 	watchlater: {$dateToString: {format: "%m %d, %Y", date: "$watchlater", timezone: "America/New_York"}}
-				// }}
+				{$limit: videosPerPage},
+				{$set: {views: {$reverseArray: "$views"}}}
 			],
 			"videoCount": [{$count: "count"}]
 		}
@@ -96,10 +97,33 @@ function vidLength(milliseconds) {
   return lengthArray.join(":")
 }
 
+function dateString(timeBool, dateInput) {
+	date = dateInput.toLocaleDateString("en-US", {timeZone: "UTC", month: "long", day: "numeric", year: "numeric"})
+	if (timeBool === true) {
+		let hour = dateInput.getHours(), minute = dateInput.getMinutes(), ampm = "AM"
+		if (hour >= 12) { ampm = "PM" }
+		hour = hour % 12
+		if (hour == 0) { hour = 12 }
+		if (minute < 10) { minute = "0" + minute }
+		date = hour + ":" + minute + " " + ampm + " " + date
+	}
+
+	return date
+}
+
+
 function displayAttrs(docs) {
 	docs.forEach(function(element, index) {
+		docs[index]["date"] = dateString(false, element.date)
 		docs[index]["resolution"] = vidRes(element.framewidth)
 		docs[index]["length"] = vidLength(element.length)
+		docs[index]["creationdate"] = dateString(true, element.creationdate)
+		if (element.views.length > 0) {
+			element.views.forEach(function(jlement, jndex) {
+				docs[index]["views"][jndex] = dateString(true, jlement)
+			})
+		}
+		if (element.watchlater !== undefined) { docs[index]["watchlater"] = dateString(true, element.watchlater) }
 	})
 
 	return docs
@@ -107,15 +131,24 @@ function displayAttrs(docs) {
 
 
 
+
+
 router.get("/all", (req, res) => {
 	let {page, facetAggregation} = volatileFacet(req.query.p, "date")
 
 	videosModel.aggregate([
-			facetAggregation
-		]).exec((err, docs) =>{
-		let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
-
-		res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pages, page, pageCount, pageArray, url})
+		facetAggregation
+	]).exec((err, docs) => {
+		if (err) {
+			console.log("Error 404 - Page not found")
+			res.status(404).redirect("/")
+		} else if (docs[0].videos.length == 0) {
+			console.log("Error 204 - No content found; 0 documents matched the parameters")
+			res.status(204).redirect("/")
+		} else if (docs[0].videos.length > 0) {
+			let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
+			res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pageTitle: "All Videos", pages, page, pageCount, pageArray, url})
+		}
 	})
 })
 
@@ -125,10 +158,17 @@ router.get("/new", (req, res) => {
 
 	videosModel.aggregate([
 		facetAggregation
-	]).exec((err, docs) =>{
-		let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
-
-		res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pages, page, pageCount, pageArray, url})
+	]).exec((err, docs) => {
+		if (err) {
+			console.log("Error 404 - Page not found")
+			res.status(404).redirect("/")
+		} else if (docs[0].videos.length == 0) {
+			console.log("Error 204 - No content found; 0 documents matched the parameters")
+			res.status(204).redirect("/")
+		} else if (docs[0].videos.length > 0) {
+			let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
+			res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pageTitle: "New Videos", pages, page, pageCount, pageArray, url})
+		}
 	})
 })
 
@@ -140,10 +180,17 @@ router.get("/top", (req, res) => {
 		{$set: {viewcount: {$size: "$views"}}},
 		{$match: {viewcount: {$gt: 1}}},
 		facetAggregation
-	]).exec((err, docs) =>{
-		let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
-		
-		res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pages, page, pageCount, pageArray, url})
+	]).exec((err, docs) => {
+		if (err) {
+			console.log("Error 404 - Page not found")
+			res.status(404).redirect("/")
+		} else if (docs[0].videos.length == 0) {
+			console.log("Error 204 - No content found; 0 documents matched the parameters")
+			res.status(204).redirect("/")
+		} else if (docs[0].videos.length > 0) {
+			let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
+			res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pageTitle: "Top Videos", pages, page, pageCount, pageArray, url})
+		}
 	})
 })
 
@@ -154,19 +201,19 @@ router.get("/watch-later", (req, res) => {
 	videosModel.aggregate([
 		{$match: {watchlater: {$ne: null}}},
 		facetAggregation
-	]).exec((err, docs) =>{
-		let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
-		
-		res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pages, page, pageCount, pageArray, url})
+	]).exec((err, docs) => {
+		if (err) {
+			console.log("Error 404 - Page not found")
+			res.status(404).redirect("/")
+		} else if (docs[0].videos.length == 0) {
+			console.log("Error 204 - No content found; 0 documents matched the parameters")
+			res.status(204).redirect("/")
+		} else if (docs[0].videos.length > 0) {
+			let {pages, pageCount, pageArray, url} = pagination(req, page, docs)
+			res.render("videos.ejs", {videos: displayAttrs(docs[0].videos), pageTitle: "Watch Later", pages, page, pageCount, pageArray, url})
+		}	
 	})
 })
 
-
-
-router.get("/query", (req, res) => {
-	videosModel.findOne({_id: "62323c6aaa07942530cd9605"}).exec((err, doc) =>{
-		res.send(doc)
-	})
-})
 
 module.exports = router

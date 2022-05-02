@@ -2,8 +2,8 @@
 
 <% videos.forEach(function(element, index) { %>
 <div class="item" data-id = "<%= element._id %>">
-	<div class="frame">
-		<img src="assets/thumbnailMissing.jpg">
+	<div class="frame" onclick="toggleModal(this)" data-temp = "<%= JSON.stringify(element) %>">
+		<img src="<%= element.videoid + "/thumbnail.jpg" %>">
 		<div class="infoOverlay hContainer">
 			<% if (element.views.length > 0) { %>
 			<div class="icon" style="background-image: url('assets/icons/watchedIcon.png');"></div>
@@ -17,3 +17,14 @@
 	<p><%= element.featuring.join(", ") %></p>
 </div>
 <% }) %>
+
+
+
+<script>
+	$(document).ready(function() {
+		$("#vidGallery .frame").each(function(i) {
+			$(this).data("doc", $(this).data("temp"))
+			$(this).removeAttr("data-temp")
+		})
+	})
+</script>

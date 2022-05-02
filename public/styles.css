@@ -1,5 +1,10 @@
 /* Fonts */
 @font-face {
+  font-family: Montserrat Regular;
+  src: url(assets/fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
   font-family: Montserrat Medium;
   src: url(assets/fonts/Montserrat-Medium.ttf);
 }
@@ -40,7 +45,6 @@
 * {
   box-sizing: border-box;
   margin: 0px;
-  /*transition: blur 0.25s ease-out;*/
 }
 
 *::-webkit-scrollbar {
@@ -63,9 +67,17 @@ img {
   display: block;
 }
 
+option {}
+
+select {}
+
+p {}
+
 a {
   text-decoration: none;
 }
+
+span {}
 
 p, a, span {
   font-family: Roboto;
@@ -188,6 +200,7 @@ header a ~ a:not(:nth-child(2)) {
 }
 
 .icon {
+  cursor: pointer;
   aspect-ratio: 1 / 1;
   background-position: center;
   background-repeat: no-repeat;
@@ -196,4 +209,10 @@ header a ~ a:not(:nth-child(2)) {
 .hScroll {
   display: flex;
   overflow: scroll;
+}
+
+
+.blur {
+  overflow: hidden;
+  -webkit-filter: blur(5px);
 }

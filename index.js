@@ -19,7 +19,9 @@ let videosModel = require("./public/models/videoSchema.js")
 
 
 const videos = require("./public/routes/videos")
+const insights = require("./public/routes/insights")
 app.use("/videos", videos)
+app.use("/insights", insights)
 
 
 app.listen(1234, () => {
@@ -28,17 +30,13 @@ app.listen(1234, () => {
 
 
 
-
-
 app.get("/", (req, res) => {
-	res.render("baseline.ejs")
+	res.render("baseline.ejs", {pageTitle: "The RKS Project"})
 })
 
 
 
-
-
 app.use(function(req, res, next) {
-	console.log("ERROR 404 - page not found")
+	console.log("Error 404 - Page not found")
 	res.status(404).redirect("/")
 })
