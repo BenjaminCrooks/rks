@@ -121,7 +121,7 @@ db.videos.updateOne(
 ```
 
 ```js
-db.prints.updateOne(
+db.videos.updateOne(
 	{_id: ObjectId("229739")},
 	{$push: 
 		{
