@@ -18,6 +18,15 @@ let videosModel = require("../models/videoSchema.js")
 const videosPerPage = 30
 
 function pagination(req, page, docs) {
+	/**
+	 * Accepts the request, current page number, and array of queried MongoDB documents, and returns the pages boolean, total page count, array of pagination options, and the url
+	 * 
+	 * @param {Object} req
+	 * @param {number} page - Current page number
+	 * @param {array} docs - Video documents
+	 * @returns {Object} - Contains a boolean to dictate if pagination loads, the total page count for the MongoDB query, the array of pages to be displayed in the pagination navigation bar, and the page's url
+	 */
+
 	let pageCount = Math.ceil((docs[0].videoCount[0].count)/videosPerPage),
 			pageArray = [page-3, page-2, page-1, page, page+1, page+2, page+3],
 			iterablePages = [page-3, page-2, page-1, page, page+1, page+2, page+3],
@@ -46,6 +55,14 @@ function pagination(req, page, docs) {
 }
 
 function volatileFacet(pageParam, sortOrder) {
+	/**
+	 * Accepts a page number and desired sorting parameter, and returns the page number and the facet aggregation for pagination
+	 * 
+	 * @param {string} pageParam - Current page number from req.query
+	 * @param {string} sortOrder - Desired attribute to be used when sorting the video aggregation
+	 * @returns {Object} - Contains the current page number as an integer and the constructed aggregation that enables pagination
+	 */
+
 	if (pageParam == undefined) {pageParam = 1}
 	let page = parseInt(pageParam)
 	
@@ -69,6 +86,14 @@ function volatileFacet(pageParam, sortOrder) {
 }
 
 function vidRes(frameWidth) {
+	/**
+	 * Accepts a frame width and returns it as am abbreviated term
+	 * Called in the function displayAttrs()
+	 * 
+	 * @param {number} frameWidth
+	 * @returns {string} - Abbreviated resolution term
+	 */
+
   let resolution
 
   if (frameWidth >= 3800) {
@@ -89,6 +114,14 @@ function vidRes(frameWidth) {
 }
 
 function vidLength(milliseconds) {
+	/**
+	 * Accepts an amount of milliseconds and returns it as a readable, formatted string
+	 * Called in the function displayAttrs()
+	 * 
+	 * @param {number} milliseconds
+	 * @returns {string} - Milliseconds as HOUR:MINUTE:SECOND
+	 */
+
 	let lengthArray = [(milliseconds/(3600000))%24, (milliseconds/(60000))%60, (milliseconds/1000)%60]
 	lengthArray.forEach(function(element, index) {
 		lengthArray[index] = String(Math.floor(element)).padStart(2, "0")
@@ -97,9 +130,18 @@ function vidLength(milliseconds) {
   return lengthArray.join(":")
 }
 
-function dateString(timeBool, dateInput) {
+function dateString(isTime, dateInput) {
+	/**
+	 * Accepts details for a date object and returns it as a readable, formatted string
+	 * Called in the function displayAttrs()
+	 * 
+	 * @param {boolean} isTime - Whether the formatted date output should include the time of day
+	 * @param {Object} dateInput - Date object
+	 * @returns {string} - Date as HOUR:MINUTE AM/PM MONTH DAY, YEAR
+	 */
+
 	date = dateInput.toLocaleDateString("en-US", {timeZone: "UTC", month: "long", day: "numeric", year: "numeric"})
-	if (timeBool === true) {
+	if (isTime === true) {
 		let hour = dateInput.getHours(), minute = dateInput.getMinutes(), ampm = "AM"
 		if (hour >= 12) { ampm = "PM" }
 		hour = hour % 12
@@ -107,12 +149,18 @@ function dateString(timeBool, dateInput) {
 		if (minute < 10) { minute = "0" + minute }
 		date = hour + ":" + minute + " " + ampm + " " + date
 	}
-
+	
 	return date
 }
 
-
 function displayAttrs(docs) {
+	/**
+	 * Accepts an array of queried MongoDB documents and returns the array with the attributes formatted to be readable to a person
+	 * 
+	 * @param {array} docs - Video documents
+	 * @returns {array} - Video documents
+	 */
+
 	docs.forEach(function(element, index) {
 		docs[index]["date"] = dateString(false, element.date)
 		docs[index]["resolution"] = vidRes(element.framewidth)
