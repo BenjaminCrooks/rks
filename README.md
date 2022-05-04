@@ -73,3 +73,86 @@ mediaDatabase
 }
 
 ```
+
+
+## Project Setup
+
+### MongoDB Document Creation
+```js
+db.videos.insertOne(
+	{videoid: "",
+	studio: "",
+	title: "",
+	date: new Date(""),
+	featuring: [],
+	tags: [],
+	series: [],
+	filesize: NumberInt(),
+	filetype: "",
+	length: NumberInt(),
+	framewidth: NumberInt(),
+	frameheight: NumberInt(),
+	framerate: NumberDecimal(),
+	photos: NumberInt(),
+	ffmpeg: NumberInt(),
+	views: [],
+	creationdate: new Date("")}
+)
+```
+
+```js
+db.videos.insertMany([
+	// document,
+	// document,
+	// ...
+])
+```
+
+### MongoDB Document Updating
+```js
+db.videos.updateOne(
+	{_id: ObjectId("229739")},
+	{$set: 
+		{
+			watchlater: new Date(),
+		}
+	}
+)
+```
+
+```js
+db.prints.updateOne(
+	{_id: ObjectId("229739")},
+	{$push: 
+		{
+			views: new Date()
+		}
+	}
+)
+```
+
+```js
+db.videos.updateMany(
+	{},
+	{$rename: 
+		{
+			"actors": "featuring",
+			"categories": "tags"
+		}
+	}
+)
+```
+
+### MongoDB Collection Backup
+```
+cd ...\MongoDB\Server\4.2\bin
+mongodump
+```
+
+### FFmpeg
+Used to generate the video interval overview images.
+
+The *fps* denominator is set to the total length of the video in seconds divided by the number of desired images.
+```
+ffmpeg -i video.mp4 -vf fps=1/29 output/image_%d.jpg
+```
