@@ -18,6 +18,26 @@ Media application to enable managing and interacting with a local media collecti
 └── README.md
 ```
 
+## Development Log
+
+### v1.0.3
+**Advanced search**
+- Allows user to build and call a unique query
+
+**Video document page** *(unfinished)*
+- Displays information relative to an individual document from the mediaDatabase.videos collection
+- Allows user to browse videos at a micro level view
+- Accompanied by routes to update the document; enables the recording of viewing and marking videos to be "saved for later"
+
+### v1.0.2
+**Pagination**
+- Defined the functions and aggregation pipeline(s) nessecary to allow for pagination of the video gallery
+
+### v1.0.1
+**Video gallery page**
+- Gallery style visualization of the mediaDatabase.videos collection
+- Allows user to browse videos at a macro level view; does not show full document information
+
 ## Media Folder Architecture
 Each media item has a dedicated folder that houses the nessecary files and items. Each of these folder's names corresponds to the respective media document's id; with all media folders being housed on a dedicated storage system.
 

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Rooks - <%= pageTitle %></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Rooks">
+<meta name="description" content="Advanced search input">
+
+<link rel="icon" href="assets/icons/rooksIcon.png">
+<link rel="stylesheet" href="styles.css">
+<script src="plugins/jquery-3.4.1.min.js"></script>
+
+<style>
+
+	input[type=text]:disabled {
+		visibility: hidden;
+	}
+
+	input:invalid {
+		outline-offset: -1px;
+		outline: solid 1px red;
+	}
+
+	input[type=checkbox] {
+		appearance: none;
+	}
+
+	input[type=checkbox]:checked {
+		background-image: url('assets/icons/checkmark.png');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: auto 100%;
+		background-color: #444444;
+	}
+
+	.menu {
+		width: 60vw;
+	}
+
+
+	#searchSubmit {
+		margin-left: 6vw;
+		font-size: 16px;
+	}
+
+	.addInput {
+		font-family: Montserrat Bold;
+		width: 34px;
+	    height: 34px;
+	    font-size: 24px;
+	    line-height: 34px;
+	    text-align: center;
+	    border: solid 1px #444444;
+	    padding: 0px;
+	    color: #444444;
+	}
+
+</style>
+
+</head>
+
+<body>
+
+<%- include("partials/header") %>
+
+<main>
+
+	<div id="search-params" class="menu">
+
+		<div class="hContainer">
+			<label>Studios</label>
+			<div id="q-studio" class="hContainer">
+				<button>Paramount Global</button>
+				<button>Warner Bros. Entertainment</button>
+				<button>Sony Pictures</button>
+				<button>Walt Disney Studios</button>
+				<button>Studio Ghibli</button>
+				<button>Lionsgate</button>
+				<button>Adelaide Productions</button>
+				<button>South Park Studios</button>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>Title</label>
+			<div class="hContainer">
+				<input id="q-title" type="text" autocomplete="off" spellcheck="false" placeholder="Contains . . ." style="width:300px">
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>Featuring</label>
+			<div id="q-featuring" class="vContainer">
+				<input type="text" autocomplete="off" spellcheck="false" placeholder="Name . . ." style="width:300px" autofocus>
+				<button class="addInput">+</button>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>Tags</label>
+			<div id="q-tags" class="hContainer">
+				<button>Action</button>
+				<button>Adventure</button>
+				<button>Animation</button>
+				<button>Comedy</button>
+				<button>Crime</button>
+				<button>Documentaries</button>
+				<button>Drama</button>
+				<button>Fantasy</button>
+				<button>Sci-Fi</button>
+				<button>Horror</button>
+				<button>Suspense</button>
+				<button>Mystery</button>
+				<button>Shonen</button>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>File Types</label>
+			<div id="q-filetype" class="hContainer">
+				<button>mp4</button>
+				<button>vid</button>
+				<button>f4v</button>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>RANGE TEST</label>
+			<div class="hContainer">
+				<div class="vContainer" style="gap:8px;">
+					<p>Minimum</p>
+					<input type="text" autocomplete="off" spellcheck="false" placeholder=". . ." style="width:100px">
+				</div>
+				<div class="vContainer" style="gap:8px;">
+					<p>Maximum</p>
+					<input type="text" autocomplete="off" spellcheck="false" placeholder=". . ." style="width:100px">
+				</div>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>Result Order</label>
+			<div class="hContainer">
+				<select id="q-order">
+					<option value selected>Release Date</option>
+					<option value="creationdate">Addition Date</option>
+					<option value="viewcount">View Count</option>
+					<option value="datelastview">Recent View</option>
+					<option value="length">Video Length</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="hContainer">
+			<label>Preferences</label>
+			<div class="vContainer">
+				<div class="hContainer"><input id="q-watchlater" type="checkbox" value><label for="q-watchlater">Watch Later</label></div>
+				<div class="hContainer">
+					<input id="q-random-bool" type="checkbox" value>
+					<label for="q-random-bool">Random</label>
+					<input id="q-random-val" type="text" autocomplete="off" spellcheck="false" style="width:34px;text-align:center;" pattern="[0-9]+" maxlength="2" value disabled>
+				</div>
+			</div>
+		</div>
+
+		<button id="searchSubmit" type="submit">Search</button>
+
+	</div>
+
+</main>
+
+<script>
+	$(document).ready(function() {
+		$("#search-params > .hContainer .hContainer > button").click(function(event) {
+			$(event.target).toggleClass("selected")
+		})
+
+		$("button.addInput").click(function() {
+			$(this).parent().children().first().clone().val("").insertBefore("button.addInput").focus()
+		})
+
+		$("#q-random-bool").on("change", function() {
+			if ($(this).prop("checked")) {
+				$("#q-random-val").attr("disabled", false).val("30").focus().select()
+			} else {
+				$("#q-random-val").attr("disabled", true).val("")
+			}
+		})
+
+
+
+		$("#searchSubmit").click(function() {
+			$("input:checkbox").each(function(element, index) {
+				if ($(this).prop("checked")) { $(this).val("true") }
+			})
+
+			if ($("#q-random-val").is(":invalid")) {
+				$("#q-random-val").val("30")
+			}
+
+			let urlQuery = [
+				["studio=", $("#q-studio button.selected").map(function() { return $(this).text().trim() }).get().join("%2B")],
+				["title=", $("#q-title").val().trim()],
+				["featuring=", $("#q-featuring input").map(function() { return $(this).val().trim() }).get().join("%2B")],
+				["tags=", $("#q-tags button.selected").map(function() { return $(this).text().trim() }).get().join("%2B")],
+				["filetype=", $("#q-filetype button.selected").map(function() { return $(this).text().trim() }).get().join("%2B")],
+				["watchlater=", $("#q-watchlater").val()],
+				["random=", $("#q-random-val").val()],
+				["order=", $("#q-order option:selected").val().trim()]
+			]
+			
+			urlQuery = urlQuery.filter((element) => element[1] !== "").map((element) => element.join("")).join("&").replaceAll(" ", "%20")
+
+			location.href = "http://localhost:1234/videos/search?" + urlQuery
+		})
+	})
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<title>Rooks - <%= pageTitle %></title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Rooks">
+<meta name="description" content="Video gallery page">
+
+<link rel="icon" href="assets/icons/rooksIcon.png">
+<link rel="stylesheet" href="styles.css">
+<script src="plugins/jquery-3.4.1.min.js"></script>
+
+<style>
+
+	#vidGallery {
+		width: 80vw;
+		gap: 24px;
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.infoOverlay {
+		height: 32px;
+		gap: 12px;
+	}
+
+	.infoOverlay p {
+		font-family: Roboto Black;
+	}
+
+	.infoOverlay p:last-of-type {
+		font-family: Roboto Medium;
+	}
+
+	#pagination {
+		gap: 16px;
+		margin-top: 16px;
+		padding: 0px;
+	}
+
+	#pagination .btn {
+		width: 38px;
+		height: 38px;
+		font-size: 18px;
+		line-height: 38px;
+	 	text-align: center;
+	}
+
+	.pageArrow {
+		background-image: url("assets/icons/hIndicator.png");
+		background-size: auto 60%;
+	}
+
+	.pageArrow:hover {
+		opacity: .56;
+	}
+
+	.infoOverlay .icon {
+		height: 150%;
+		background-size: auto 100%;
+	}
+
+</style>
+
+</head>
+
+<body>
+
+<%- include("partials/header") %>
+
+<main>
+	
+	<div id="vidGallery" class="gallery">
+
+		<% videos.forEach(function(element, index) { %>
+		<div class="item" data-id = "<%= element._id %>">
+			<a class="frame" href="http://localhost:1234/videos/<%= element._id %>">
+				<img src="<%= element.videoid + "/thumbnail.jpg" %>">
+				<div class="infoOverlay hContainer">
+					<% if (element.views.length > 0) { %>
+					<div class="icon" style="background-image: url('assets/icons/watchedIcon.png');"></div>
+					<% } if (element.watchlater != undefined) { %>
+					<div class="icon" style="background-image: url('assets/icons/savedIconW.png');"></div>
+					<% } %>
+					<p style="margin-left: auto;"><%= element.resolution %></p>
+					<p><%= element.length %></p>
+				</div>
+			</a>
+			<p><%= element.featuring.join(", ") %></p>
+		</div>
+		<% }) %>
+		
+	</div>
+
+	<%- include("partials/pagination", {page, pageCount, pageArray, url}) %>
+	
+</main>
+
+</body>
+
+</html>

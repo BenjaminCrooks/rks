@@ -67,23 +67,66 @@ img {
   display: block;
 }
 
-option {}
-
-select {}
-
-p {}
-
 a {
   text-decoration: none;
 }
 
 span {}
 
-p, a, span {
+p, a, span, label, h1, h2, h3, h4, h5, h6 {
   font-family: Roboto;
   font-size: 13px;
   color: white;
   line-height: 1em;
+}
+
+h1 {
+  font-family: Montserrat Bold;
+  font-size: 2em;
+  font-variant: small-caps;
+}
+
+h2 {
+  font-family: Montserrat Regular;
+  font-size: 1.25em;
+  color: #989898;
+  /*color: #484848;*/
+}
+
+select, input, button, label {
+  font-family: Montserrat Medium;
+}
+
+select, input, button {
+  color: white;
+  padding: 8px;
+  font-size: 13px;
+}
+
+select, input {
+  background-color: #181818;
+  border: solid 1px #444444;
+}
+
+button {
+  border: none;
+  background-color: Transparent;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #989898;
+  color: #282828;
+}
+
+button.selected {
+  background-color: #686868;
+}
+
+span.note {
+  font-style: italic;
+  font-size: 0.6em;
+  color: #989898;
 }
 
 
@@ -138,7 +181,6 @@ header a ~ a:not(:nth-child(2)) {
 .gallery {
   display: grid;
   align-items: center;
-  gap: 24px;
 }
 
 .gallery img {
@@ -150,7 +192,6 @@ header a ~ a:not(:nth-child(2)) {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow: hidden;
   transition: opacity 0.25s ease-out;
 }
 
@@ -164,6 +205,7 @@ header a ~ a:not(:nth-child(2)) {
 
 .frame {
   position: relative;
+  overflow: hidden;
 }
 
 .infoOverlay {
@@ -200,6 +242,7 @@ header a ~ a:not(:nth-child(2)) {
 }
 
 .icon {
+  position: relative;
   cursor: pointer;
   aspect-ratio: 1 / 1;
   background-position: center;
@@ -211,8 +254,36 @@ header a ~ a:not(:nth-child(2)) {
   overflow: scroll;
 }
 
-
 .blur {
   overflow: hidden;
   -webkit-filter: blur(5px);
+}
+
+
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.menu div {
+  gap: 8px;
+}
+
+.menu > .hContainer {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.hContainer > label:first-child {
+  color: #989898;
+}
+
+.menu > .hContainer > div:last-child {
+  width: 54vw;
+  border-left: 1px solid #989898;
+  padding: 0px 0px 0px 8px;
+  flex-wrap: wrap;
 }
