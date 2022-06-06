@@ -20,7 +20,7 @@ Media application to enable managing and interacting with a local media collecti
 
 ## Development Log
 
-### v1.0.3
+### v1.3.0
 **Advanced search**
 - Allows user to build and call a unique query
 
@@ -29,11 +29,11 @@ Media application to enable managing and interacting with a local media collecti
 - Allows user to browse videos at a micro level view
 - Accompanied by routes to update the document; enables the recording of viewing and marking videos to be "saved for later"
 
-### v1.0.2
+### v1.2.0
 **Pagination**
 - Defined the functions and aggregation pipeline(s) nessecary to allow for pagination of the video gallery
 
-### v1.0.1
+### v1.1.0
 **Video gallery page**
 - Gallery style visualization of the mediaDatabase.videos collection
 - Allows user to browse videos at a macro level view; does not show full document information
